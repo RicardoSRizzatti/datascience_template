@@ -1,11 +1,12 @@
 {
   "project": "iris-classifier",
+  "title": "Classificação de espécies de íris",
   "model_file": "model.onnx",
   "task": "classification",
   "estimator": "LogisticRegression",
-  "trained_at": "2026-10-30T01:51:00+00:00",
+  "trained_at": "2026-10-30T01:54:31+00:00",
   "git": {
-    "commit": "6f5a17e",
+    "commit": "341b4ae",
     "dirty": true
   },
   "features": [
@@ -50,6 +51,13 @@
     "versicolor",
     "virginica"
   ],
+  "display_names": {
+    "species": "Espécie",
+    "sepal_length": "Comprimento da sépala (cm)",
+    "sepal_width": "Largura da sépala (cm)",
+    "petal_length": "Comprimento da pétala (cm)",
+    "petal_width": "Largura da pétala (cm)"
+  },
   "params": {
     "C": 1.0,
     "max_iter": 500
@@ -121,5 +129,5 @@
     }
   },
   "n_test": 30,
-  "evaluated_at": "2026-10-30T01:51:01+00:00"
+  "evaluated_at": "2026-10-30T01:54:32+00:00"
 }

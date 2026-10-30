@@ -53,4 +53,4 @@ tests/test_tools.py::test_parquet_buffer_helper_is_stdlib_io PASSED      [100%]
     from starlette.testclient import TestClient as TestClient  # noqa
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
-======================== 39 passed, 1 warning in 2.65s =========================
+======================== 39 passed, 1 warning in 2.78s =========================

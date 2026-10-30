@@ -3,18 +3,18 @@ make[1]: Entering directory '/home/runner/work/datascience_template/datascience_
 make extract
 make[2]: Entering directory '/home/runner/work/datascience_template/datascience_template'
 uv run python -m etl.extract
-01:50:55 | INFO    | __main__ | Extract: 150 linhas × 5 colunas → /home/runner/work/datascience_template/datascience_template/data/raw/iris.parquet
+01:54:26 | INFO    | __main__ | Extract: 150 linhas × 5 colunas → /home/runner/work/datascience_template/datascience_template/data/raw/iris.parquet
 make[2]: Leaving directory '/home/runner/work/datascience_template/datascience_template'
 make transform
 make[2]: Entering directory '/home/runner/work/datascience_template/datascience_template'
 uv run python -m etl.transform
-01:50:56 | INFO    | __main__ | Transform: 1 linhas removidas (nulos/duplicadas)
-01:50:56 | INFO    | __main__ | Transform: 149 linhas → /home/runner/work/datascience_template/datascience_template/data/interim/iris.parquet
+01:54:27 | INFO    | __main__ | Transform: 1 linhas removidas (nulos/duplicadas)
+01:54:27 | INFO    | __main__ | Transform: 149 linhas → /home/runner/work/datascience_template/datascience_template/data/interim/iris.parquet
 make[2]: Leaving directory '/home/runner/work/datascience_template/datascience_template'
 make load
 make[2]: Entering directory '/home/runner/work/datascience_template/datascience_template'
 uv run python -m etl.load
-01:50:56 | INFO    | __main__ | Load: 149 linhas → /home/runner/work/datascience_template/datascience_template/data/processed/iris.parquet
+01:54:27 | INFO    | __main__ | Load: 149 linhas → /home/runner/work/datascience_template/datascience_template/data/processed/iris.parquet
 make[2]: Leaving directory '/home/runner/work/datascience_template/datascience_template'
 make[1]: Leaving directory '/home/runner/work/datascience_template/datascience_template'
 make train
@@ -22,18 +22,18 @@ make[1]: Entering directory '/home/runner/work/datascience_template/datascience_
 make split
 make[2]: Entering directory '/home/runner/work/datascience_template/datascience_template'
 uv run python -m ml.split
-01:50:58 | INFO    | __main__ | Split: treino=119, teste=30
+01:54:29 | INFO    | __main__ | Split: treino=119, teste=30
 make[2]: Leaving directory '/home/runner/work/datascience_template/datascience_template'
 make fit
 make[2]: Entering directory '/home/runner/work/datascience_template/datascience_template'
 uv run python -m ml.train
-[0;93m2026-10-30 01:51:00.437394917 [W:onnxruntime:Default, device_discovery.cc:95 GetPciBusId] Skipping pci_bus_id for PCI path at "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/ACPI0004:00/MSFT1000:00/5620e0c7-8062-4dce-aeb7-520c7ef76171" because filename "5620e0c7-8062-4dce-aeb7-520c7ef76171" did not match expected pattern of [0-9a-f]+:[0-9a-f]+:[0-9a-f]+[.][0-9a-f]+[m
-01:51:00 | INFO    | __main__ | Train: LogisticRegression salvo em /home/runner/work/datascience_template/datascience_template/models/model.onnx (paridade ONNX: 2.2e-07)
+[0;93m2026-10-30 01:54:31.324831429 [W:onnxruntime:Default, device_discovery.cc:95 GetPciBusId] Skipping pci_bus_id for PCI path at "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/ACPI0004:00/MSFT1000:00/5620e0c7-8062-4dce-aeb7-520c7ef76171" because filename "5620e0c7-8062-4dce-aeb7-520c7ef76171" did not match expected pattern of [0-9a-f]+:[0-9a-f]+:[0-9a-f]+[.][0-9a-f]+[m
+01:54:31 | INFO    | __main__ | Train: LogisticRegression salvo em /home/runner/work/datascience_template/datascience_template/models/model.onnx (paridade ONNX: 2.2e-07)
 make[2]: Leaving directory '/home/runner/work/datascience_template/datascience_template'
 make evaluate
 make[2]: Entering directory '/home/runner/work/datascience_template/datascience_template'
 uv run python -m ml.evaluate
-[0;93m2026-10-30 01:51:01.828205394 [W:onnxruntime:Default, device_discovery.cc:95 GetPciBusId] Skipping pci_bus_id for PCI path at "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/ACPI0004:00/MSFT1000:00/5620e0c7-8062-4dce-aeb7-520c7ef76171" because filename "5620e0c7-8062-4dce-aeb7-520c7ef76171" did not match expected pattern of [0-9a-f]+:[0-9a-f]+:[0-9a-f]+[.][0-9a-f]+[m
-01:51:01 | INFO    | __main__ | Evaluate (ONNX, n=30): {'accuracy': 0.9333, 'f1_macro': 0.9333, 'precision_macro': 0.9333, 'recall_macro': 0.9333}
+[0;93m2026-10-30 01:54:32.800826206 [W:onnxruntime:Default, device_discovery.cc:95 GetPciBusId] Skipping pci_bus_id for PCI path at "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/ACPI0004:00/MSFT1000:00/5620e0c7-8062-4dce-aeb7-520c7ef76171" because filename "5620e0c7-8062-4dce-aeb7-520c7ef76171" did not match expected pattern of [0-9a-f]+:[0-9a-f]+:[0-9a-f]+[.][0-9a-f]+[m
+01:54:32 | INFO    | __main__ | Evaluate (ONNX, n=30): {'accuracy': 0.9333, 'f1_macro': 0.9333, 'precision_macro': 0.9333, 'recall_macro': 0.9333}
 make[2]: Leaving directory '/home/runner/work/datascience_template/datascience_template'
 make[1]: Leaving directory '/home/runner/work/datascience_template/datascience_template'

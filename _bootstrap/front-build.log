@@ -8,6 +8,6 @@ transforming...
 rendering chunks...
 computing gzip size...
 [2mdist/[22m[32mindex.html                 [39m[1m[2m  0.47 kB[22m[1m[22m[2m │ gzip:   0.30 kB[22m
-[2mdist/[22m[2massets/[22m[35mindex-CZIT7otH.css  [39m[1m[2m  4.67 kB[22m[1m[22m[2m │ gzip:   1.60 kB[22m
-[2mdist/[22m[2massets/[22m[36mindex-Cajo--Qx.js   [39m[1m[2m851.07 kB[22m[1m[22m[2m │ gzip: 284.24 kB[22m
-[32m✓ built in 4.61s[39m
+[2mdist/[22m[2massets/[22m[35mindex-BxeCYfPh.css  [39m[1m[2m  4.86 kB[22m[1m[22m[2m │ gzip:   1.64 kB[22m
+[2mdist/[22m[2massets/[22m[36mindex-BUjh2ElM.js   [39m[1m[2m851.35 kB[22m[1m[22m[2m │ gzip: 284.32 kB[22m
+[32m✓ built in 4.62s[39m
