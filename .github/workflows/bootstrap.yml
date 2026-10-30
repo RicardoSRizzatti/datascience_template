@@ -1,4 +1,5 @@
-# TEMPORÁRIO: gera lockfiles e valida o template. Será removido antes do merge na main.
+# TEMPORÁRIO: gera lockfiles, valida o template e comita os resultados nesta branch.
+# Será removido antes do merge na main.
 name: bootstrap
 
 on:
@@ -7,7 +8,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   bootstrap:
@@ -23,79 +24,61 @@ jobs:
 
       - name: Python - lock, sync, format
         run: |
-          uv --version
-          uv lock
-          uv sync
-          uv run ruff format . || true
-          uv run ruff check --fix . 2>&1 | tee ruff.log || true
+          mkdir -p _bootstrap
+          uv --version > _bootstrap/versions.txt
+          uv lock 2>&1 | tee _bootstrap/uv-lock.log
+          uv sync 2>&1 | tail -40 > _bootstrap/uv-sync.log
+          uv run ruff format . > _bootstrap/ruff.log 2>&1 || true
+          uv run ruff check --fix . >> _bootstrap/ruff.log 2>&1; echo "ruff=$?" >> _bootstrap/status.txt
 
       - name: Python - pipeline + testes
-        continue-on-error: true
         run: |
-          set -o pipefail
-          make all 2>&1 | tee pipeline.log
-          uv run pytest -v 2>&1 | tee pytest.log
-
-      - name: Python - wheels para uso offline
-        run: |
-          uv export --all-groups --no-emit-project --no-hashes --format requirements-txt > req.txt
-          uvx --from pip pip download -r req.txt -d wheels --only-binary=:all: --python-version 3.12 \
-            --platform manylinux2014_x86_64 --platform manylinux_2_17_x86_64 --platform manylinux_2_28_x86_64 \
-            --platform manylinux_2_34_x86_64 --platform linux_x86_64 2>&1 | tail -5
-          uvx --from pip pip download hatchling -d wheels --only-binary=:all: 2>&1 | tail -2
-          ls wheels | wc -l
+          make all > _bootstrap/pipeline.log 2>&1; echo "pipeline=$?" >> _bootstrap/status.txt
+          uv run pytest -v > _bootstrap/pytest.log 2>&1; echo "pytest=$?" >> _bootstrap/status.txt
+          uv pip list > _bootstrap/pip-list.txt 2>&1 || true
 
       - name: Front - install + build
-        continue-on-error: true
         working-directory: app/frontend
         run: |
-          set -o pipefail
-          npm install 2>&1 | tee ../../npm-install.log
-          npm run build 2>&1 | tee ../../front-build.log
-          tar czf ../../node_modules.tgz node_modules
+          node --version >> ../../_bootstrap/versions.txt
+          npm install > ../../_bootstrap/npm-install.log 2>&1; echo "npm_install=$?" >> ../../_bootstrap/status.txt
+          npm ls --depth=0 >> ../../_bootstrap/versions.txt 2>&1 || true
+          npm run build > ../../_bootstrap/front-build.log 2>&1; echo "front_build=$?" >> ../../_bootstrap/status.txt
 
       - name: Docker - build + smoke test
-        continue-on-error: true
         run: |
-          set -o pipefail
-          docker build -t app . 2>&1 | tee docker-build.log
-          docker run -d -p 8000:8000 --name app app
+          docker build -t app . > _bootstrap/docker-build.log 2>&1; echo "docker_build=$?" >> _bootstrap/status.txt
+          docker run -d -p 8000:8000 --name app app >> _bootstrap/docker-smoke.log 2>&1 || true
           for i in $(seq 1 30); do curl -fs localhost:8000/api/health && break; sleep 1; done
           {
-            curl -fs localhost:8000/api/health; echo
-            curl -fs localhost:8000/api/model | head -c 400; echo
-            curl -fs -X POST localhost:8000/api/predict -H 'Content-Type: application/json' \
+            curl -fsS localhost:8000/api/health; echo
+            curl -fsS -X POST localhost:8000/api/predict -H 'Content-Type: application/json' \
               -d '{"features": {"sepal_length": 6.5, "sepal_width": 3.0, "petal_length": 5.2, "petal_width": 2.0}}'; echo
-            curl -fs localhost:8000/ | head -c 300; echo
+            curl -fsS localhost:8000/ | head -c 400; echo
             docker image ls app
-          } 2>&1 | tee docker-smoke.log
-          docker logs app 2>&1 | tail -20 >> docker-smoke.log
+            docker inspect --format '{{json .State.Health}}' app
+          } >> _bootstrap/docker-smoke.log 2>&1; echo "docker_smoke=$?" >> _bootstrap/status.txt
+          docker logs app >> _bootstrap/docker-smoke.log 2>&1 || true
 
-      - name: Patch com as mudanças geradas
+      - name: Screenshots do app
+        run: |
+          cd _bootstrap
+          npx -y playwright@1.56.0 install --with-deps chromium > playwright.log 2>&1
+          for scheme in light dark; do
+            npx -y playwright@1.56.0 screenshot --browser=chromium --color-scheme=$scheme \
+              --viewport-size=1280,900 --full-page --wait-for-timeout=4000 \
+              http://localhost:8000 app-$scheme.png >> playwright.log 2>&1
+          done
+          npx -y playwright@1.56.0 screenshot --browser=chromium --viewport-size=390,844 --full-page \
+            --wait-for-timeout=4000 http://localhost:8000 app-mobile.png >> playwright.log 2>&1
+          echo "screenshots=$?" >> status.txt
+
+      - name: Comitar resultados na branch
         if: always()
         run: |
-          git add -A -- . ':!wheels' ':!node_modules.tgz' ':!*.log' ':!req.txt' ':!app/frontend/dist' ':!data'
-          git -c core.fileMode=false diff --cached --binary > changes.patch
-          git diff --cached --stat
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: results
-          path: |
-            changes.patch
-            *.log
-            req.txt
-            app/frontend/dist
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: wheels
-          path: wheels
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: node-modules
-          path: node_modules.tgz
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add -A -- . ':!app/frontend/dist' ':!data'
+          git add -f _bootstrap
+          git commit -m "bootstrap: resultados da execução" || true
+          git push
