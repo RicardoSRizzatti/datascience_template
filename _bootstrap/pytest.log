@@ -1,0 +1,101 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.2.0, pluggy-1.7.0 -- /home/runner/work/datascience_template/datascience_template/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /home/runner/work/datascience_template/datascience_template
+configfile: pyproject.toml
+testpaths: tests
+plugins: anyio-4.15.1, platformdirs-4.14.0
+collecting ... collected 39 items
+
+tests/test_api.py::test_health PASSED                                    [  2%]
+tests/test_api.py::test_model_info PASSED                                [  5%]
+tests/test_api.py::test_predict PASSED                                   [  7%]
+tests/test_api.py::test_predict_batch PASSED                             [ 10%]
+tests/test_api.py::test_predict_validates_schema PASSED                  [ 12%]
+tests/test_api.py::test_unknown_api_route_is_404 PASSED                  [ 15%]
+tests/test_etl.py::test_transform_standardizes_columns_and_target PASSED [ 17%]
+tests/test_model_io.py::test_only_onnx_paths_are_accepted[model.joblib] PASSED [ 20%]
+tests/test_model_io.py::test_only_onnx_paths_are_accepted[model.pkl] PASSED [ 23%]
+tests/test_model_io.py::test_only_onnx_paths_are_accepted[model.pickle] PASSED [ 25%]
+tests/test_model_io.py::test_only_onnx_paths_are_accepted[model] PASSED  [ 28%]
+tests/test_model_io.py::test_save_rejects_non_onnx PASSED                [ 30%]
+tests/test_model_io.py::test_classifier_roundtrip PASSED                 [ 33%]
+tests/test_model_io.py::test_regressor_roundtrip PASSED                  [ 35%]
+tests/test_model_io.py::test_parity_failure_writes_nothing PASSED        [ 38%]
+tests/test_model_io.py::test_predict_records_matches_dataframe PASSED    [ 41%]
+tests/test_model_io.py::test_check_models_dir_flags_other_formats PASSED [ 43%]
+tests/test_project_rules.py::test_models_dir_contains_only_onnx PASSED   [ 46%]
+tests/test_project_rules.py::test_dependency_direction[tools-forbidden0] PASSED [ 48%]
+tests/test_project_rules.py::test_dependency_direction[etl-forbidden1] PASSED [ 51%]
+tests/test_project_rules.py::test_dependency_direction[ml-forbidden2] PASSED [ 53%]
+tests/test_project_rules.py::test_dependency_direction[app-forbidden3] PASSED [ 56%]
+tests/test_project_rules.py::test_no_pickle_or_joblib_model_saving PASSED [ 58%]
+tests/test_project_rules.py::test_data_is_not_versioned PASSED           [ 61%]
+tests/test_project_rules.py::test_root_is_repository PASSED              [ 64%]
+tests/test_tools.py::test_snake_case[sepal length (cm)-sepal_length] PASSED [ 66%]
+tests/test_tools.py::test_snake_case[Petal Width [mm]-petal_width] PASSED [ 69%]
+tests/test_tools.py::test_snake_case[ClientID-client_id] PASSED          [ 71%]
+tests/test_tools.py::test_snake_case[  valor-total R$ -valor_total_r] PASSED [ 74%]
+tests/test_tools.py::test_snake_case_columns_detects_collisions PASSED   [ 76%]
+tests/test_tools.py::test_require_columns PASSED                         [ 79%]
+tests/test_tools.py::test_feature_stats PASSED                           [ 82%]
+tests/test_tools.py::test_local_roundtrip PASSED                         [ 84%]
+tests/test_tools.py::test_processed_local_is_default PASSED              [ 87%]
+tests/test_tools.py::test_invalid_destination PASSED                     [ 89%]
+tests/test_tools.py::test_gcs_roundtrip_with_fake_client PASSED          [ 92%]
+tests/test_tools.py::test_bigquery_write_with_fake_module PASSED         [ 94%]
+tests/test_tools.py::test_bigquery_requires_project FAILED               [ 97%]
+tests/test_tools.py::test_parquet_buffer_helper_is_stdlib_io PASSED      [100%]
+
+=================================== FAILURES ===================================
+________________________ test_bigquery_requires_project ________________________
+
+    def _bigquery_module():
+        try:
+>           from google.cloud import bigquery
+E           ModuleNotFoundError: No module named 'google.cloud'
+
+tools/data_io.py:83: ModuleNotFoundError
+
+The above exception was the direct cause of the following exception:
+
+config = {'project': {'name': 'iris-classifier', 'seed': 42}, 'paths': {'raw': '/tmp/pytest-of-runner/pytest-0/test_bigquery_re...nce_template', 'write_disposition': 'WRITE_TRUNCATE'}, 'gcs': {'bucket': None, 'prefix': 'datascience_template'}}, ...}
+df =      a  b
+0  1.0  x
+1  2.0  y
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f6cb9809190>
+
+    def test_bigquery_requires_project(config: dict, df: pd.DataFrame, monkeypatch) -> None:
+        monkeypatch.delenv("GCP_PROJECT", raising=False)
+        config["load"]["destination"] = "bigquery"
+        config["load"]["bigquery"]["project"] = None
+        with pytest.raises(ValueError, match="GCP_PROJECT"):
+>           data_io.write_processed(df, config)
+
+tests/test_tools.py:126: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tools/data_io.py:63: in write_processed
+    return _write_bigquery(df, config)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tools/data_io.py:99: in _write_bigquery
+    bigquery = _bigquery_module()
+               ^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def _bigquery_module():
+        try:
+            from google.cloud import bigquery
+        except ImportError as exc:  # pragma: no cover - depende do ambiente
+>           raise ImportError("Instale o grupo gcp: make setup-gcp") from exc
+E           ImportError: Instale o grupo gcp: make setup-gcp
+
+tools/data_io.py:85: ImportError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /home/runner/work/datascience_template/datascience_template/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_tools.py::test_bigquery_requires_project - ImportError: Instale o grupo gcp: make setup-gcp
+=================== 1 failed, 38 passed, 1 warning in 2.84s ====================

@@ -35,7 +35,9 @@ def iris() -> tuple[pd.DataFrame, pd.Series]:
 @pytest.fixture(scope="module")
 def classifier(iris) -> Pipeline:
     X, y = iris
-    return Pipeline([("scaler", StandardScaler()), ("model", LogisticRegression(max_iter=500))]).fit(X, y)
+    return Pipeline(
+        [("scaler", StandardScaler()), ("model", LogisticRegression(max_iter=500))]
+    ).fit(X, y)
 
 
 @pytest.mark.parametrize("name", ["model.joblib", "model.pkl", "model.pickle", "model"])

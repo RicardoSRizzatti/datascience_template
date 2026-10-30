@@ -110,7 +110,12 @@ def test_bigquery_write_with_fake_module(config: dict, df: pd.DataFrame, monkeyp
     location = data_io.write_processed(df, config)
     table = config["data"]["table"]
     assert location == f"bigquery://meu-projeto.ds.{table}"
-    assert calls == {"project": "meu-projeto", "dataset": "meu-projeto.ds", "table": f"meu-projeto.ds.{table}", "rows": 2}
+    assert calls == {
+        "project": "meu-projeto",
+        "dataset": "meu-projeto.ds",
+        "table": f"meu-projeto.ds.{table}",
+        "rows": 2,
+    }
 
 
 def test_bigquery_requires_project(config: dict, df: pd.DataFrame, monkeypatch) -> None:

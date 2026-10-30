@@ -24,9 +24,9 @@ from app.api.predictor import Predictor
 from app.api.schemas import (
     HealthResponse,
     ModelInfo,
-    Prediction,
     PredictBatchRequest,
     PredictBatchResponse,
+    Prediction,
     PredictRequest,
 )
 from tools.log import get_logger

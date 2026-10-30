@@ -131,7 +131,9 @@ def _gcs_settings(config: dict[str, Any]) -> tuple[str, str]:
     if not bucket:
         raise ValueError("Defina load.gcs.bucket no config.yaml ou GCS_BUCKET no .env.")
     prefix = (gcs.get("prefix") or "").strip("/")
-    blob_name = "/".join(p for p in (prefix, "processed", f"{config['data']['table']}.parquet") if p)
+    blob_name = "/".join(
+        p for p in (prefix, "processed", f"{config['data']['table']}.parquet") if p
+    )
     return bucket, blob_name
 
 

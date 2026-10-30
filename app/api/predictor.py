@@ -22,7 +22,9 @@ class Predictor:
     def from_config(cls, config: dict[str, Any] | None = None) -> Predictor:
         config = config or load_config()
         models_dir = get_path("models", config)
-        return cls(models_dir / config["model"]["file"], models_dir / config["model"]["metadata_file"])
+        return cls(
+            models_dir / config["model"]["file"], models_dir / config["model"]["metadata_file"]
+        )
 
     def validate(self, record: dict[str, Any]) -> list[str]:
         """Lista de erros de schema (features faltando ou desconhecidas)."""

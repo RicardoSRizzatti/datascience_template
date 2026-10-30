@@ -79,9 +79,7 @@ def convert_to_onnx(model: Any, X_sample: Any, target_opset: int | None = None):
         return to_onnx(model, X_sample.iloc[:1], **kwargs)
 
     n_features = np.asarray(X_sample).shape[1]
-    return to_onnx(
-        model, initial_types=[("input", FloatTensorType([None, n_features]))], **kwargs
-    )
+    return to_onnx(model, initial_types=[("input", FloatTensorType([None, n_features]))], **kwargs)
 
 
 def _reference_outputs(model: Any, X: Any) -> np.ndarray:
@@ -114,7 +112,9 @@ def save_onnx_model(
 
     session = ort.InferenceSession(onx.SerializeToString(), providers=["CPUExecutionProvider"])
     result = predict_onnx(session, X_sample)
-    onnx_out = result["probabilities"] if result["probabilities"] is not None else result["prediction"]
+    onnx_out = (
+        result["probabilities"] if result["probabilities"] is not None else result["prediction"]
+    )
     onnx_out = np.asarray(onnx_out, dtype=np.float64).reshape(len(X_sample), -1)
     max_diff = float(np.max(np.abs(onnx_out - _reference_outputs(model, X_sample))))
     if max_diff > tolerance:
