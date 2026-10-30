@@ -104,13 +104,12 @@ def save_onnx_model(
     usada para conferir que o ONNX reproduz o modelo original.
     """
     import onnx
-    import onnxruntime as ort
 
     path = ensure_onnx_path(path)
     onx = convert_to_onnx(model, X_sample, target_opset=target_opset)
     onnx.checker.check_model(onx)
 
-    session = ort.InferenceSession(onx.SerializeToString(), providers=["CPUExecutionProvider"])
+    session = _new_session(onx.SerializeToString())
     result = predict_onnx(session, X_sample)
     onnx_out = (
         result["probabilities"] if result["probabilities"] is not None else result["prediction"]
@@ -134,13 +133,19 @@ def save_onnx_model(
 
 
 # --------------------------------------------------------------------- inferência
-def load_onnx_session(path: str | Path):
+def _new_session(model: str | bytes):
     import onnxruntime as ort
 
+    # Só erros no log: evita avisos inofensivos de descoberta de hardware em VMs/WSL.
+    ort.set_default_logger_severity(3)
+    return ort.InferenceSession(model, providers=["CPUExecutionProvider"])
+
+
+def load_onnx_session(path: str | Path):
     path = ensure_onnx_path(path)
     if not path.exists():
         raise FileNotFoundError(f"Modelo não encontrado em {path}. Rode `make train`.")
-    return ort.InferenceSession(str(path), providers=["CPUExecutionProvider"])
+    return _new_session(str(path))
 
 
 _ORT_DTYPES = {

@@ -24,30 +24,30 @@ jobs:
 
       - name: Python - lock, sync, format
         run: |
-          mkdir -p _bootstrap
+          rm -rf _bootstrap && mkdir -p _bootstrap
           uv --version > _bootstrap/versions.txt
           uv lock 2>&1 | tee _bootstrap/uv-lock.log
           uv sync 2>&1 | tail -40 > _bootstrap/uv-sync.log
           uv run ruff format . > _bootstrap/ruff.log 2>&1 || true
-          uv run ruff check --fix . >> _bootstrap/ruff.log 2>&1; echo "ruff=$?" >> _bootstrap/status.txt
+          uv run ruff check --fix . >> _bootstrap/ruff.log 2>&1 && echo "ruff=0" >> _bootstrap/status.txt || echo "ruff=1" >> _bootstrap/status.txt
 
       - name: Python - pipeline + testes
         run: |
-          make all > _bootstrap/pipeline.log 2>&1; echo "pipeline=$?" >> _bootstrap/status.txt
-          uv run pytest -v > _bootstrap/pytest.log 2>&1; echo "pytest=$?" >> _bootstrap/status.txt
+          make all > _bootstrap/pipeline.log 2>&1 && echo "pipeline=0" >> _bootstrap/status.txt || echo "pipeline=1" >> _bootstrap/status.txt
+          uv run pytest -v > _bootstrap/pytest.log 2>&1 && echo "pytest=0" >> _bootstrap/status.txt || echo "pytest=1" >> _bootstrap/status.txt
           uv pip list > _bootstrap/pip-list.txt 2>&1 || true
 
       - name: Front - install + build
         working-directory: app/frontend
         run: |
           node --version >> ../../_bootstrap/versions.txt
-          npm install > ../../_bootstrap/npm-install.log 2>&1; echo "npm_install=$?" >> ../../_bootstrap/status.txt
+          npm install > ../../_bootstrap/npm-install.log 2>&1 && echo "npm_install=0" >> ../../_bootstrap/status.txt || echo "npm_install=1" >> ../../_bootstrap/status.txt
           npm ls --depth=0 >> ../../_bootstrap/versions.txt 2>&1 || true
-          npm run build > ../../_bootstrap/front-build.log 2>&1; echo "front_build=$?" >> ../../_bootstrap/status.txt
+          npm run build > ../../_bootstrap/front-build.log 2>&1 && echo "front_build=0" >> ../../_bootstrap/status.txt || echo "front_build=1" >> ../../_bootstrap/status.txt
 
       - name: Docker - build + smoke test
         run: |
-          docker build -t app . > _bootstrap/docker-build.log 2>&1; echo "docker_build=$?" >> _bootstrap/status.txt
+          docker build -t app . > _bootstrap/docker-build.log 2>&1 && echo "docker_build=0" >> _bootstrap/status.txt || echo "docker_build=1" >> _bootstrap/status.txt
           docker run -d -p 8000:8000 --name app app >> _bootstrap/docker-smoke.log 2>&1 || true
           for i in $(seq 1 30); do curl -fs localhost:8000/api/health && break; sleep 1; done
           {
@@ -57,7 +57,7 @@ jobs:
             curl -fsS localhost:8000/ | head -c 400; echo
             docker image ls app
             docker inspect --format '{{json .State.Health}}' app
-          } >> _bootstrap/docker-smoke.log 2>&1; echo "docker_smoke=$?" >> _bootstrap/status.txt
+          } >> _bootstrap/docker-smoke.log 2>&1 && echo "docker_smoke=0" >> _bootstrap/status.txt || echo "docker_smoke=1" >> _bootstrap/status.txt
           docker logs app >> _bootstrap/docker-smoke.log 2>&1 || true
 
       - name: Screenshots do app
@@ -67,11 +67,11 @@ jobs:
           for scheme in light dark; do
             npx -y playwright@1.56.0 screenshot --browser=chromium --color-scheme=$scheme \
               --viewport-size=1280,900 --full-page --wait-for-timeout=4000 \
-              http://localhost:8000 app-$scheme.png >> playwright.log 2>&1
+              http://localhost:8000 app-$scheme.png >> playwright.log 2>&1 || true
           done
           npx -y playwright@1.56.0 screenshot --browser=chromium --viewport-size=390,844 --full-page \
-            --wait-for-timeout=4000 http://localhost:8000 app-mobile.png >> playwright.log 2>&1
-          echo "screenshots=$?" >> status.txt
+            --wait-for-timeout=4000 http://localhost:8000 app-mobile.png >> playwright.log 2>&1 || true
+          ls *.png >> status.txt 2>&1 || echo "screenshots=0 arquivos" >> status.txt
 
       - name: Comitar resultados na branch
         if: always()

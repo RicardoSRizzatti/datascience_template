@@ -96,8 +96,8 @@ def _bq_settings(config: dict[str, Any]) -> tuple[str, str]:
 
 
 def _write_bigquery(df: pd.DataFrame, config: dict[str, Any]) -> str:
+    project, table_id = _bq_settings(config)  # valida a config antes de exigir o pacote
     bigquery = _bigquery_module()
-    project, table_id = _bq_settings(config)
     client = bigquery.Client(project=project)
     dataset_id = table_id.rsplit(".", 1)[0]
     client.create_dataset(dataset_id, exists_ok=True)
