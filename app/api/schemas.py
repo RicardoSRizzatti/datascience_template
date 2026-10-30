@@ -37,6 +37,7 @@ class HealthResponse(BaseModel):
 
 class ModelInfo(BaseModel):
     project: str | None = None
+    title: str | None = None
     task: str
     estimator: str | None = None
     trained_at: str | None = None
@@ -46,6 +47,7 @@ class ModelInfo(BaseModel):
     feature_stats: dict[str, dict[str, Any]] = {}
     target: str
     classes: list[str] | None = None
+    display_names: dict[str, str] = {}
     n_train: int | None = None
     n_test: int | None = None
     metrics: dict[str, Any] | None = None

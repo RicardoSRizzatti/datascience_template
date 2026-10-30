@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { api } from "../api/client";
 import type { FeatureValues, ModelInfo } from "../api/types";
 import { LineChart, type LineSeries } from "../charts";
-import { formatDecimal, formatPercent, humanize } from "../utils/format";
+import { displayName, formatDecimal, formatPercent } from "../utils/format";
 import { useDebounced } from "../utils/useDebounced";
 
 const POINTS = 80;
@@ -50,7 +50,7 @@ export function SensitivityPanel({ model, values, feature }: SensitivityPanelPro
         } else {
           setSeries([
             {
-              name: humanize(model.target),
+              name: displayName(model, model.target),
               points: grid.map((x, i): [number, number] => [x, Number(predictions[i].prediction)]),
             },
           ]);
@@ -61,7 +61,7 @@ export function SensitivityPanel({ model, values, feature }: SensitivityPanelPro
       });
 
     return () => controller.abort();
-  }, [grid, debouncedValues, feature, isClassification, model.classes, model.target]);
+  }, [grid, debouncedValues, feature, isClassification, model]);
 
   if (!stats) {
     return <p className="muted">Sensibilidade disponível apenas para features numéricas.</p>;
@@ -70,9 +70,9 @@ export function SensitivityPanel({ model, values, feature }: SensitivityPanelPro
 
   return (
     <LineChart
-      label={`Previsão do modelo variando ${humanize(feature)}`}
+      label={`Previsão do modelo variando ${displayName(model, feature)}`}
       series={series}
-      xName={humanize(feature)}
+      xName={displayName(model, feature)}
       yFormat={isClassification ? formatPercent : formatDecimal}
       yMin={isClassification ? 0 : undefined}
       yMax={isClassification ? 1 : undefined}

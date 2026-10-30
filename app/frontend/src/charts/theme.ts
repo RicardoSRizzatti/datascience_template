@@ -26,6 +26,9 @@ export interface ChartTokens {
   sequential: string[];
   /** Cor do texto dentro de cada passo da sequencial (branco ou quase preto). */
   sequentialLabel: string[];
+  /** Célula vazia (valor zero) em mapas de calor: neutra, recua para a superfície. */
+  emptyCell: string;
+  emptyCellLabel: string;
   /** Tom de baixa ênfase para marcas secundárias. */
   deemphasis: string;
   tooltipBg: string;
@@ -45,6 +48,8 @@ export const tokens: Record<ColorScheme, ChartTokens> = {
     series: ["#2a78d6", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#008300", "#6250d6", "#e34948"],
     sequential: ["#cde2fb", "#9ec5f4", "#6da7ec", "#3987e5", "#256abf", "#184f95", "#0d366b"],
     sequentialLabel: ["#0b0b0b", "#0b0b0b", "#0b0b0b", "#ffffff", "#ffffff", "#ffffff", "#ffffff"],
+    emptyCell: "#f0efec",
+    emptyCellLabel: "#52514e",
     deemphasis: "#b7d3f6",
     tooltipBg: "#ffffff",
     tooltipBorder: "rgba(11,11,11,0.10)",
@@ -59,6 +64,8 @@ export const tokens: Record<ColorScheme, ChartTokens> = {
     series: ["#3987e5", "#d95926", "#199e70", "#c98500", "#d55181", "#008300", "#9085e9", "#e66767"],
     sequential: ["#104281", "#184f95", "#1c5cab", "#256abf", "#3987e5", "#6da7ec", "#9ec5f4"],
     sequentialLabel: ["#ffffff", "#ffffff", "#ffffff", "#ffffff", "#ffffff", "#0b0b0b", "#0b0b0b"],
+    emptyCell: "#262625",
+    emptyCellLabel: "#c3c2b7",
     deemphasis: "#184f95",
     tooltipBg: "#242423",
     tooltipBorder: "rgba(255,255,255,0.10)",

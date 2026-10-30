@@ -1,6 +1,6 @@
 import type { ModelInfo, Prediction } from "../api/types";
 import { BarChart } from "../charts";
-import { formatDecimal, formatPercent, humanize } from "../utils/format";
+import { displayName, formatDecimal, formatPercent } from "../utils/format";
 
 interface PredictionPanelProps {
   model: ModelInfo;
@@ -20,7 +20,7 @@ export function PredictionPanel({ model, prediction, loading }: PredictionPanelP
   return (
     <div className={`prediction ${loading ? "is-loading" : ""}`} aria-live="polite">
       <div className="hero">
-        <span className="hero-label">{humanize(model.target)} previsto</span>
+        <span className="hero-label">{displayName(model, model.target)}</span>
         <span className="hero-value">
           {typeof prediction.prediction === "number" ? formatDecimal(prediction.prediction) : label}
         </span>

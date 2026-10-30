@@ -1,6 +1,6 @@
 // Formulário gerado a partir do metadata: funciona para qualquer modelo sem mudar o front.
 import type { FeatureValue, FeatureValues, ModelInfo, NumericStats } from "../api/types";
-import { humanize } from "../utils/format";
+import { displayName } from "../utils/format";
 
 interface FeatureFormProps {
   model: ModelInfo;
@@ -22,11 +22,12 @@ export function FeatureForm({ model, values, onChange, onReset }: FeatureFormPro
       {model.features.map((feature) => {
         const stats = model.feature_stats[feature];
         const id = `feature-${feature}`;
+        const label = displayName(model, feature);
 
         if (stats?.type === "categorical") {
           return (
             <div className="field" key={feature}>
-              <label htmlFor={id}>{humanize(feature)}</label>
+              <label htmlFor={id}>{label}</label>
               <select id={id} value={String(values[feature] ?? "")} onChange={(e) => onChange(feature, e.target.value)}>
                 {stats.categories.map((c) => (
                   <option key={c} value={c}>
@@ -43,11 +44,11 @@ export function FeatureForm({ model, values, onChange, onReset }: FeatureFormPro
         return (
           <div className="field" key={feature}>
             <div className="field-row">
-              <label htmlFor={id}>{humanize(feature)}</label>
+              <label htmlFor={id}>{label}</label>
               <input
                 className="number-input"
                 type="number"
-                aria-label={`${humanize(feature)} (valor)`}
+                aria-label={`${label} (valor)`}
                 value={value}
                 step={numeric ? numericStep(numeric) : "any"}
                 onChange={(e) => onChange(feature, e.target.valueAsNumber || 0)}

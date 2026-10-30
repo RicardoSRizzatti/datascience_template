@@ -34,6 +34,7 @@ export interface RegressionMetrics {
 
 export interface ModelInfo {
   project?: string | null;
+  title?: string | null;
   task: "classification" | "regression";
   estimator?: string | null;
   trained_at?: string | null;
@@ -43,6 +44,7 @@ export interface ModelInfo {
   feature_stats: Record<string, FeatureStats>;
   target: string;
   classes?: string[] | null;
+  display_names?: Record<string, string>;
   n_train?: number | null;
   n_test?: number | null;
   metrics?: ClassificationMetrics | RegressionMetrics | null;

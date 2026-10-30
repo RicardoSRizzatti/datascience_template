@@ -136,7 +136,8 @@ def save_onnx_model(
 def _new_session(model: str | bytes):
     import onnxruntime as ort
 
-    # Só erros no log: evita avisos inofensivos de descoberta de hardware em VMs/WSL.
+    # Log do onnxruntime só com erros durante a inferência.
+    # (O aviso "GetPciBusId" que aparece em VMs/WSL ao iniciar é inofensivo.)
     ort.set_default_logger_severity(3)
     return ort.InferenceSession(model, providers=["CPUExecutionProvider"])
 

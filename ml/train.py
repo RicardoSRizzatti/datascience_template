@@ -63,6 +63,7 @@ def main() -> None:
     classifier = is_classifier(pipeline)
     metadata = {
         "project": config["project"]["name"],
+        "title": config["project"].get("title"),
         "model_file": model_cfg["file"],
         "task": "classification" if classifier else "regression",
         "estimator": type(pipeline[-1]).__name__,
@@ -72,6 +73,7 @@ def main() -> None:
         "feature_stats": feature_stats(train_df, features),
         "target": target,
         "classes": [str(c) for c in pipeline.classes_] if classifier else None,
+        "display_names": config["data"].get("display_names") or {},
         "params": model_cfg.get("params") or {},
         "n_train": len(train_df),
         "onnx": onnx_info,

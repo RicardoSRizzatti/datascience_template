@@ -4,6 +4,7 @@
 
 project:
   name: iris-classifier
+  title: Classificação de espécies de íris   # título exibido no app
   seed: 42
 
 paths:
@@ -21,6 +22,13 @@ data:
     - sepal_width
     - petal_length
     - petal_width
+  # Nomes exibidos no app (opcional; sem isso o app usa o nome da coluna)
+  display_names:
+    species: Espécie
+    sepal_length: Comprimento da sépala (cm)
+    sepal_width: Largura da sépala (cm)
+    petal_length: Comprimento da pétala (cm)
+    petal_width: Largura da pétala (cm)
 
 # Destino dos dados processados: local (padrão) | bigquery | gcs
 load:

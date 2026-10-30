@@ -37,22 +37,29 @@ export function HeatmapChart({
   const option = useMemo<ChartOption>(() => {
     const maxValue = Math.max(1, ...matrix.flat());
     const steps = t.sequential.length;
-    const stepOf = (v: number) => (v <= 0 ? 0 : Math.min(steps - 1, 1 + Math.floor((v / maxValue) * (steps - 2))));
+    // Zero = célula neutra; valores > 0 percorrem a escala sequencial do tom mais claro ao mais escuro.
+    const stepOf = (v: number) => Math.min(steps - 1, Math.floor((v / maxValue) * (steps - 1)));
 
     const data = matrix.flatMap((row, i) =>
       row.map((value, j) => {
+        const empty = value <= 0;
         const step = stepOf(value);
         return {
           value: [j, i, value],
-          itemStyle: { color: t.sequential[step], borderColor: t.surface, borderWidth: 2, borderRadius: 4 },
-          label: { color: t.sequentialLabel[step] },
+          itemStyle: {
+            color: empty ? t.emptyCell : t.sequential[step],
+            borderColor: t.surface,
+            borderWidth: 2,
+            borderRadius: 4,
+          },
+          label: { color: empty ? t.emptyCellLabel : t.sequentialLabel[step] },
         };
       }),
     );
 
     return {
       ...baseOption(t),
-      grid: { left: 8, right: 8, top: 8, bottom: 36, containLabel: true },
+      grid: { left: 8, right: 8, top: 28, bottom: 36, containLabel: true },
       tooltip: {
         ...baseOption(t).tooltip,
         trigger: "item",
@@ -62,15 +69,16 @@ export function HeatmapChart({
         },
       },
       xAxis: categoryAxis(t, xLabels, {
-        name: xName,
+        name: `${xName} →`,
         nameLocation: "middle",
         nameGap: 28,
         axisLine: { show: false },
       }),
       yAxis: categoryAxis(t, yLabels, {
-        name: yName,
-        nameLocation: "middle",
-        nameGap: 72,
+        name: `${yName} ↓`,
+        nameLocation: "start", // com inverse, "start" fica no topo do eixo
+        nameGap: 10,
+        nameTextStyle: { color: t.textMuted, fontSize: 11, align: "right", padding: [0, 8, 0, 0] },
         inverse: true,
         axisLine: { show: false },
       }),

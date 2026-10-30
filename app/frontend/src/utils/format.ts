@@ -20,3 +20,8 @@ export function humanize(name: string): string {
   const text = name.replace(/_/g, " ").trim();
   return text.charAt(0).toUpperCase() + text.slice(1);
 }
+
+/** Nome exibido de uma coluna: data.display_names do config.yaml ou o nome humanizado. */
+export function displayName(model: { display_names?: Record<string, string> }, name: string): string {
+  return model.display_names?.[name] ?? humanize(name);
+}

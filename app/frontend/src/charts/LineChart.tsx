@@ -61,7 +61,7 @@ export function LineChart({
     const base = baseOption(t);
     return {
       ...base,
-      grid: { left: 8, right: multi ? 96 : 24, top: multi ? 40 : 16, bottom: useZoom ? 56 : 8, containLabel: true },
+      grid: { left: 8, right: multi ? 96 : 24, top: multi ? 40 : 16, bottom: useZoom ? 72 : 36, containLabel: true },
       legend: multi
         ? {
             top: 0,

@@ -7,7 +7,7 @@ import { FeatureForm } from "./components/FeatureForm";
 import { ModelQuality } from "./components/ModelQuality";
 import { PredictionPanel } from "./components/PredictionPanel";
 import { SensitivityPanel } from "./components/SensitivityPanel";
-import { formatDate, humanize } from "./utils/format";
+import { displayName, formatDate } from "./utils/format";
 import { useDebounced } from "./utils/useDebounced";
 
 /** Valores iniciais: média das numéricas e primeira categoria das categóricas. */
@@ -97,7 +97,8 @@ export default function App() {
         <div>
           <p className="eyebrow">{model.project ?? "Projeto"}</p>
           <h1>
-            {model.task === "classification" ? "Classificação" : "Regressão"} de {humanize(model.target).toLowerCase()}
+            {model.title ??
+              `${model.task === "classification" ? "Classificação" : "Regressão"}: ${displayName(model, model.target)}`}
           </h1>
         </div>
         <dl className="model-facts">
@@ -150,7 +151,7 @@ export default function App() {
               >
                 {numericFeatures.map((f) => (
                   <option key={f} value={f}>
-                    {humanize(f)}
+                    {displayName(model, f)}
                   </option>
                 ))}
               </select>

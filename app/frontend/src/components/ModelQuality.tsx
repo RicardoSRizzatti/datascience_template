@@ -28,13 +28,13 @@ export function ModelQuality({ model }: { model: ModelInfo }) {
   const m = metrics as ClassificationMetrics;
   return (
     <div className="quality">
-      <div className="stat-grid">
+      <div className="stat-grid stat-grid-2">
         <StatTile label="Acurácia" value={formatPercent(m.accuracy)} hint={testHint} />
         <StatTile label="F1 (macro)" value={formatPercent(m.f1_macro)} hint={testHint} />
         <StatTile label="Precisão (macro)" value={formatPercent(m.precision_macro)} hint={testHint} />
         <StatTile label="Recall (macro)" value={formatPercent(m.recall_macro)} hint={testHint} />
       </div>
-      <div>
+      <div className="confusion">
         <h3>Matriz de confusão</h3>
         <HeatmapChart
           label="Matriz de confusão no conjunto de teste"
