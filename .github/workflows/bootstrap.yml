@@ -1,89 +1,41 @@
-# TEMPORÁRIO: gera lockfiles, valida o template e comita os resultados nesta branch.
-# Será removido antes do merge na main.
+# TEMPORÁRIO: treina o modelo de exemplo a partir do commit final (branch release-tmp).
 name: bootstrap
 
 on:
   push:
     branches: [bootstrap]
-  workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  bootstrap:
+  train-release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+        with:
+          ref: release-tmp
+          fetch-depth: 0
 
       - uses: astral-sh/setup-uv@v7
 
-      - uses: actions/setup-node@v5
-        with:
-          node-version: 22
-
-      - name: Python - lock, sync, format
-        run: |
-          rm -rf _bootstrap && mkdir -p _bootstrap
-          uv --version > _bootstrap/versions.txt
-          uv lock 2>&1 | tee _bootstrap/uv-lock.log
-          uv sync 2>&1 | tail -40 > _bootstrap/uv-sync.log
-          uv run ruff format . > _bootstrap/ruff.log 2>&1 || true
-          uv run ruff check --fix . >> _bootstrap/ruff.log 2>&1 && echo "ruff=0" >> _bootstrap/status.txt || echo "ruff=1" >> _bootstrap/status.txt
-
-      - name: Python - pipeline + testes
-        run: |
-          make all > _bootstrap/pipeline.log 2>&1 && echo "pipeline=0" >> _bootstrap/status.txt || echo "pipeline=1" >> _bootstrap/status.txt
-          uv run pytest -v > _bootstrap/pytest.log 2>&1 && echo "pytest=0" >> _bootstrap/status.txt || echo "pytest=1" >> _bootstrap/status.txt
-          uv pip list > _bootstrap/pip-list.txt 2>&1 || true
-
-      - name: Front - install + build
-        working-directory: app/frontend
-        run: |
-          node --version >> ../../_bootstrap/versions.txt
-          npm install > ../../_bootstrap/npm-install.log 2>&1 && echo "npm_install=0" >> ../../_bootstrap/status.txt || echo "npm_install=1" >> ../../_bootstrap/status.txt
-          npm ls --depth=0 >> ../../_bootstrap/versions.txt 2>&1 || true
-          npm run build > ../../_bootstrap/front-build.log 2>&1 && echo "front_build=0" >> ../../_bootstrap/status.txt || echo "front_build=1" >> ../../_bootstrap/status.txt
-
-      - name: Docker - build + smoke test
-        run: |
-          docker build -t app . > _bootstrap/docker-build.log 2>&1 && echo "docker_build=0" >> _bootstrap/status.txt || echo "docker_build=1" >> _bootstrap/status.txt
-          docker run -d -p 8000:8000 --name app app >> _bootstrap/docker-smoke.log 2>&1 || true
-          for i in $(seq 1 30); do curl -fs localhost:8000/api/health && break; sleep 1; done
-          {
-            curl -fsS localhost:8000/api/health; echo
-            curl -fsS -X POST localhost:8000/api/predict -H 'Content-Type: application/json' \
-              -d '{"features": {"sepal_length": 6.5, "sepal_width": 3.0, "petal_length": 5.2, "petal_width": 2.0}}'; echo
-            curl -fsS localhost:8000/ | head -c 400; echo
-            docker image ls app
-            docker inspect --format '{{json .State.Health}}' app
-          } >> _bootstrap/docker-smoke.log 2>&1 && echo "docker_smoke=0" >> _bootstrap/status.txt || echo "docker_smoke=1" >> _bootstrap/status.txt
-          docker logs app >> _bootstrap/docker-smoke.log 2>&1 || true
-
-      - name: Screenshots do app
-        run: |
-          cd _bootstrap
-          npx -y playwright@1.56.0 install --with-deps chromium > playwright.log 2>&1
-          for scheme in light dark; do
-            npx -y playwright@1.56.0 screenshot --browser=chromium --color-scheme=$scheme \
-              --viewport-size=1280,900 --full-page --wait-for-timeout=4000 \
-              http://localhost:8000 app-$scheme.png >> playwright.log 2>&1 || true
-          done
-          npx -y playwright@1.56.0 screenshot --browser=chromium --viewport-size=390,844 --full-page \
-            --wait-for-timeout=4000 http://localhost:8000 app-mobile.png >> playwright.log 2>&1 || true
-          ls *.png >> status.txt 2>&1 || echo "screenshots=0 arquivos" >> status.txt
-
-      - name: Comitar resultados na branch
-        if: always()
+      - name: Treinar e validar
         run: |
           set +e
+          uv sync --locked > sync.log 2>&1 || { echo "::error title=sync::$(tail -5 sync.log | tr '\n' '|')"; exit 1; }
+          uv run ruff check . > ruff.log 2>&1 && uv run ruff format --check . >> ruff.log 2>&1
+          echo "::warning title=ruff::$(tail -3 ruff.log | tr '\n' '|')"
+          make all > pipeline.log 2>&1 || { echo "::error title=pipeline::$(tail -8 pipeline.log | tr '\n' '|')"; exit 1; }
+          echo "::warning title=pipeline::$(grep -E 'Train:|Evaluate' pipeline.log | tr '\n' '|')"
+          uv run pytest -q > pytest.log 2>&1
+          echo "::warning title=pytest::$(tail -3 pytest.log | tr '\n' '|')"
+          echo "::warning title=status::$(git status --porcelain | tr '\n' '|')"
+          echo "::warning title=git::$(python3 -c "import json;print(json.load(open('models/metadata.json'))['git'])")"
+
+      - name: Comitar modelo
+        run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
-          echo "::warning title=tamanhos::$(du -sh _bootstrap/* 2>/dev/null | sort -h | tail -6 | tr '\n' '|')"
-          git add -A -- . ':!app/frontend/dist' ':!data'
-          git add -f _bootstrap
-          echo "::warning title=staged::$(git diff --cached --stat | tail -15 | tr '\n' '|')"
-          git commit -q -m "bootstrap: resultados da execução"
-          out=$(git push 2>&1); code=$?
-          echo "$out"
-          if [ $code -ne 0 ]; then echo "::error title=push::$(echo "$out" | tail -10 | tr '\n' '|')"; exit 1; fi
+          git add models/model.onnx models/metadata.json
+          git commit -m "Modelo de exemplo treinado (Iris)"
+          git push origin HEAD:release-tmp
