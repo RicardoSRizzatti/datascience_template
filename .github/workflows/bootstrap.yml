@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      - uses: astral-sh/setup-uv@v6
+      - uses: astral-sh/setup-uv@v7
 
       - uses: actions/setup-node@v5
         with:
@@ -76,9 +76,14 @@ jobs:
       - name: Comitar resultados na branch
         if: always()
         run: |
+          set +e
           git config user.name "github-actions[bot]"
           git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          echo "::warning title=tamanhos::$(du -sh _bootstrap/* 2>/dev/null | sort -h | tail -6 | tr '\n' '|')"
           git add -A -- . ':!app/frontend/dist' ':!data'
           git add -f _bootstrap
-          git commit -m "bootstrap: resultados da execução" || true
-          git push
+          echo "::warning title=staged::$(git diff --cached --stat | tail -15 | tr '\n' '|')"
+          git commit -q -m "bootstrap: resultados da execução"
+          out=$(git push 2>&1); code=$?
+          echo "$out"
+          if [ $code -ne 0 ]; then echo "::error title=push::$(echo "$out" | tail -10 | tr '\n' '|')"; exit 1; fi
