@@ -22,13 +22,13 @@ jobs:
       - name: Treinar e validar
         run: |
           set +e
-          uv sync --locked > sync.log 2>&1 || { echo "::error title=sync::$(tail -5 sync.log | tr '\n' '|')"; exit 1; }
-          uv run ruff check . > ruff.log 2>&1 && uv run ruff format --check . >> ruff.log 2>&1
-          echo "::warning title=ruff::$(tail -3 ruff.log | tr '\n' '|')"
-          make all > pipeline.log 2>&1 || { echo "::error title=pipeline::$(tail -8 pipeline.log | tr '\n' '|')"; exit 1; }
-          echo "::warning title=pipeline::$(grep -E 'Train:|Evaluate' pipeline.log | tr '\n' '|')"
-          uv run pytest -q > pytest.log 2>&1
-          echo "::warning title=pytest::$(tail -3 pytest.log | tr '\n' '|')"
+          uv sync --locked > $RUNNER_TEMP/sync.log 2>&1 || { echo "::error title=sync::$(tail -5 $RUNNER_TEMP/sync.log | tr '\n' '|')"; exit 1; }
+          uv run ruff check . > $RUNNER_TEMP/ruff.log 2>&1 && uv run ruff format --check . >> $RUNNER_TEMP/ruff.log 2>&1
+          echo "::warning title=ruff::$(tail -3 $RUNNER_TEMP/ruff.log | tr '\n' '|')"
+          make all > $RUNNER_TEMP/pipeline.log 2>&1 || { echo "::error title=pipeline::$(tail -8 $RUNNER_TEMP/pipeline.log | tr '\n' '|')"; exit 1; }
+          echo "::warning title=pipeline::$(grep -E 'Train:|Evaluate' $RUNNER_TEMP/pipeline.log | tr '\n' '|')"
+          uv run pytest -q > $RUNNER_TEMP/pytest.log 2>&1
+          echo "::warning title=pytest::$(tail -3 $RUNNER_TEMP/pytest.log | tr '\n' '|')"
           echo "::warning title=status::$(git status --porcelain | tr '\n' '|')"
           echo "::warning title=git::$(python3 -c "import json;print(json.load(open('models/metadata.json'))['git'])")"
 
