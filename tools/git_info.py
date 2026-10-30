@@ -18,8 +18,11 @@ def _git(*args: str) -> str | None:
 
 
 def current_commit() -> dict[str, str | bool | None]:
-    """Commit atual e se havia alterações não comitadas (dirty) no momento do treino."""
-    status = _git("status", "--porcelain")
+    """Commit atual e se havia alterações não comitadas (dirty) no código ao treinar.
+
+    A pasta models/ fica de fora: ela é justamente o que o treino está gerando.
+    """
+    status = _git("status", "--porcelain", "--", ".", ":(exclude)models")
     return {
         "commit": _git("rev-parse", "--short", "HEAD"),
         "dirty": bool(status) if status is not None else None,
