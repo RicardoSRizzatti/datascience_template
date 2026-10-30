@@ -1,0 +1,25 @@
+ad9fb6f9fecdde375c631ebd7dee8b3a6eabefa1c4193ec4000a607edd13026c
+{"status":"ok","model_loaded":true}
+{"prediction":"virginica","probabilities":{"setosa":0.0005941581330262125,"versicolor":0.14780938625335693,"virginica":0.851596474647522}}
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>Data Science Template</title>
+    <script type="module" crossorigin src="/assets/index-Cajo--Qx.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-CZIT
+REPOSITORY   TAG       IMAGE ID       CREATED         SIZE
+app          latest    83f2a5fbf6dc   4 seconds ago   502MB
+{"Status":"starting","FailingStreak":0,"Log":[]}
+INFO:     Started server process [1]
+INFO:     Waiting for application startup.
+[0;93m2026-10-30 01:51:42.997474381 [W:onnxruntime:Default, device_discovery.cc:95 GetPciBusId] Skipping pci_bus_id for PCI path at "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/ACPI0004:00/MSFT1000:00/5620e0c7-8062-4dce-aeb7-520c7ef76171" because filename "5620e0c7-8062-4dce-aeb7-520c7ef76171" did not match expected pattern of [0-9a-f]+:[0-9a-f]+:[0-9a-f]+[.][0-9a-f]+[m
+01:51:43 | INFO    | app.api.main | Modelo carregado: 4 features
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     172.17.0.1:35974 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     172.17.0.1:35976 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     172.17.0.1:35990 - "POST /api/predict HTTP/1.1" 200 OK
+INFO:     172.17.0.1:36002 - "GET / HTTP/1.1" 200 OK

@@ -44,58 +44,13 @@ tests/test_tools.py::test_processed_local_is_default PASSED              [ 87%]
 tests/test_tools.py::test_invalid_destination PASSED                     [ 89%]
 tests/test_tools.py::test_gcs_roundtrip_with_fake_client PASSED          [ 92%]
 tests/test_tools.py::test_bigquery_write_with_fake_module PASSED         [ 94%]
-tests/test_tools.py::test_bigquery_requires_project FAILED               [ 97%]
+tests/test_tools.py::test_bigquery_requires_project PASSED               [ 97%]
 tests/test_tools.py::test_parquet_buffer_helper_is_stdlib_io PASSED      [100%]
 
-=================================== FAILURES ===================================
-________________________ test_bigquery_requires_project ________________________
-
-    def _bigquery_module():
-        try:
->           from google.cloud import bigquery
-E           ModuleNotFoundError: No module named 'google.cloud'
-
-tools/data_io.py:83: ModuleNotFoundError
-
-The above exception was the direct cause of the following exception:
-
-config = {'project': {'name': 'iris-classifier', 'seed': 42}, 'paths': {'raw': '/tmp/pytest-of-runner/pytest-0/test_bigquery_re...nce_template', 'write_disposition': 'WRITE_TRUNCATE'}, 'gcs': {'bucket': None, 'prefix': 'datascience_template'}}, ...}
-df =      a  b
-0  1.0  x
-1  2.0  y
-monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f6cb9809190>
-
-    def test_bigquery_requires_project(config: dict, df: pd.DataFrame, monkeypatch) -> None:
-        monkeypatch.delenv("GCP_PROJECT", raising=False)
-        config["load"]["destination"] = "bigquery"
-        config["load"]["bigquery"]["project"] = None
-        with pytest.raises(ValueError, match="GCP_PROJECT"):
->           data_io.write_processed(df, config)
-
-tests/test_tools.py:126: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-tools/data_io.py:63: in write_processed
-    return _write_bigquery(df, config)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-tools/data_io.py:99: in _write_bigquery
-    bigquery = _bigquery_module()
-               ^^^^^^^^^^^^^^^^^^
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-    def _bigquery_module():
-        try:
-            from google.cloud import bigquery
-        except ImportError as exc:  # pragma: no cover - depende do ambiente
->           raise ImportError("Instale o grupo gcp: make setup-gcp") from exc
-E           ImportError: Instale o grupo gcp: make setup-gcp
-
-tools/data_io.py:85: ImportError
 =============================== warnings summary ===============================
 .venv/lib/python3.12/site-packages/fastapi/testclient.py:1
   /home/runner/work/datascience_template/datascience_template/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
     from starlette.testclient import TestClient as TestClient  # noqa
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
-=========================== short test summary info ============================
-FAILED tests/test_tools.py::test_bigquery_requires_project - ImportError: Instale o grupo gcp: make setup-gcp
-=================== 1 failed, 38 passed, 1 warning in 2.84s ====================
+======================== 39 passed, 1 warning in 2.65s =========================

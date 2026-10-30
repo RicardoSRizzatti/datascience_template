@@ -3,9 +3,9 @@
   "model_file": "model.onnx",
   "task": "classification",
   "estimator": "LogisticRegression",
-  "trained_at": "2026-10-30T01:46:48+00:00",
+  "trained_at": "2026-10-30T01:51:00+00:00",
   "git": {
-    "commit": "0cca1a7",
+    "commit": "6f5a17e",
     "dirty": true
   },
   "features": [
@@ -121,5 +121,5 @@
     }
   },
   "n_test": 30,
-  "evaluated_at": "2026-10-30T01:46:50+00:00"
+  "evaluated_at": "2026-10-30T01:51:01+00:00"
 }

@@ -1,2 +1,10 @@
 ruff=0
 pipeline=0
+pytest=0
+npm_install=0
+front_build=0
+docker_build=0
+docker_smoke=0
+app-dark.png
+app-light.png
+app-mobile.png

@@ -1,0 +1,229 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.42kB done
+#1 DONE 0.0s
+
+#2 [auth] docker/dockerfile:pull token for registry-1.docker.io
+#2 DONE 0.0s
+
+#3 resolve image config for docker-image://docker.io/docker/dockerfile:1
+#3 DONE 0.3s
+
+#4 docker-image://docker.io/docker/dockerfile:1@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
+#4 resolve docker.io/docker/dockerfile:1@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e done
+#4 extracting sha256:9d2b4f57f9e20f33279375ce25c6ff14f30f64270ed5c7b613b2b30256754f62
+#4 sha256:7b32114e84ca21aeb2d6f871a0b62b3a0762193f75d9afd048ee4cbe889f3148 1.13kB / 1.13kB done
+#4 sha256:528c92d70d7e39dbb3dd1c6681f6750c565c7e45b70527cda47c1a61495c1b6a 1.41kB / 1.41kB done
+#4 sha256:9d2b4f57f9e20f33279375ce25c6ff14f30f64270ed5c7b613b2b30256754f62 14.28MB / 14.28MB 0.1s done
+#4 sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e 9.08kB / 9.08kB done
+#4 extracting sha256:9d2b4f57f9e20f33279375ce25c6ff14f30f64270ed5c7b613b2b30256754f62 0.1s done
+#4 DONE 0.2s
+
+#5 [auth] library/node:pull token for registry-1.docker.io
+#5 DONE 0.0s
+
+#6 [auth] library/python:pull token for registry-1.docker.io
+#6 DONE 0.0s
+
+#7 [internal] load metadata for ghcr.io/astral-sh/uv:0.13
+#7 DONE 0.2s
+
+#8 [internal] load metadata for docker.io/library/python:3.12-slim
+#8 DONE 0.3s
+
+#9 [internal] load metadata for docker.io/library/node:22-slim
+#9 DONE 0.3s
+
+#10 [internal] load .dockerignore
+#10 transferring context: 171B done
+#10 DONE 0.0s
+
+#11 [internal] load build context
+#11 DONE 0.0s
+
+#12 [runtime  1/12] FROM docker.io/library/python:3.12-slim@sha256:aa943ce411423c7582288f18707ff66eddcbaeb510502d747a72aeb34f30d159
+#12 resolve docker.io/library/python:3.12-slim@sha256:aa943ce411423c7582288f18707ff66eddcbaeb510502d747a72aeb34f30d159
+#12 ...
+
+#11 [internal] load build context
+#11 transferring context: 315.74kB 0.0s done
+#11 DONE 0.0s
+
+#12 [runtime  1/12] FROM docker.io/library/python:3.12-slim@sha256:aa943ce411423c7582288f18707ff66eddcbaeb510502d747a72aeb34f30d159
+#12 resolve docker.io/library/python:3.12-slim@sha256:aa943ce411423c7582288f18707ff66eddcbaeb510502d747a72aeb34f30d159 0.0s done
+#12 sha256:1148dbb014615300fa7e713b2f94f550c0d1c69780c0805f84f093ceee34dd0b 1.75kB / 1.75kB done
+#12 sha256:ae4e8b7c575fabea88a029b6cae757f342ca2525e07f7c22272d5105c346b35e 5.66kB / 5.66kB done
+#12 sha256:6fc242d221a673263eabd14a9ad9584d3177c96e5cb504c891497338e2f912f5 29.86MB / 29.86MB 0.1s done
+#12 sha256:3eb77115150676568f88e2957181b8f7e3014e797f1ce8cd640086dfbed45e35 1.29MB / 1.29MB 0.1s done
+#12 sha256:f574edac59d9f092df596f54e5b52656c803fd3ae30825b8ee5a189ed05f63d3 12.12MB / 12.12MB 0.2s done
+#12 sha256:aa943ce411423c7582288f18707ff66eddcbaeb510502d747a72aeb34f30d159 10.37kB / 10.37kB done
+#12 extracting sha256:6fc242d221a673263eabd14a9ad9584d3177c96e5cb504c891497338e2f912f5
+#12 sha256:acca7542dfc736e9ce20cbefc58b2d09822276d15d4a0c531531a6f1b057928e 251B / 251B 0.1s done
+#12 ...
+
+#13 FROM ghcr.io/astral-sh/uv:0.13@sha256:af22a52f5eafef3d78e551599d405c02df61919d18028f0cea8eda93bc9986d0
+#13 resolve ghcr.io/astral-sh/uv:0.13@sha256:af22a52f5eafef3d78e551599d405c02df61919d18028f0cea8eda93bc9986d0 done
+#13 extracting sha256:65f8c8b0f6f03e53646584e7bbafc47f58b188e31a9932a0b32ee4ee9928f555 0.4s done
+#13 sha256:af22a52f5eafef3d78e551599d405c02df61919d18028f0cea8eda93bc9986d0 2.19kB / 2.19kB done
+#13 sha256:8b7774a14bb3abde914fda03efcb83f1f7e9163124e5c13e7fb4cc825293f5fa 669B / 669B done
+#13 sha256:58e006e07103590f3d49fc64244e0c81c68877537b83160be11e02b40ae8ecec 1.29kB / 1.29kB done
+#13 sha256:65f8c8b0f6f03e53646584e7bbafc47f58b188e31a9932a0b32ee4ee9928f555 19.21MB / 19.21MB 0.1s done
+#13 sha256:e3b3ce09610df9e33a3e90c84989e0440a483bfe967864661138014697502694 96B / 96B 0.1s done
+#13 extracting sha256:e3b3ce09610df9e33a3e90c84989e0440a483bfe967864661138014697502694 done
+#13 DONE 0.6s
+
+#12 [runtime  1/12] FROM docker.io/library/python:3.12-slim@sha256:aa943ce411423c7582288f18707ff66eddcbaeb510502d747a72aeb34f30d159
+#12 extracting sha256:6fc242d221a673263eabd14a9ad9584d3177c96e5cb504c891497338e2f912f5 1.3s done
+#12 extracting sha256:3eb77115150676568f88e2957181b8f7e3014e797f1ce8cd640086dfbed45e35
+#12 extracting sha256:3eb77115150676568f88e2957181b8f7e3014e797f1ce8cd640086dfbed45e35 0.1s done
+#12 extracting sha256:f574edac59d9f092df596f54e5b52656c803fd3ae30825b8ee5a189ed05f63d3
+#12 extracting sha256:f574edac59d9f092df596f54e5b52656c803fd3ae30825b8ee5a189ed05f63d3 0.7s done
+#12 extracting sha256:acca7542dfc736e9ce20cbefc58b2d09822276d15d4a0c531531a6f1b057928e
+#12 extracting sha256:acca7542dfc736e9ce20cbefc58b2d09822276d15d4a0c531531a6f1b057928e done
+#12 DONE 2.6s
+
+#14 [runtime  2/12] COPY --from=ghcr.io/astral-sh/uv:0.13 /uv /usr/local/bin/uv
+#14 DONE 0.1s
+
+#15 [frontend 1/6] FROM docker.io/library/node:22-slim@sha256:4b150b48b4116e2a22f2c39cc27025fbf4f153e2078fd3b14d159fdb5c7279da
+#15 resolve docker.io/library/node:22-slim@sha256:4b150b48b4116e2a22f2c39cc27025fbf4f153e2078fd3b14d159fdb5c7279da done
+#15 sha256:9f0dde62d10e7ff7a310ecaebd66225f6b46c17e6cb778449a77b05d3541bea2 1.93kB / 1.93kB done
+#15 sha256:c469fbffcbb0086ddfb92598192d3e09eab25f2d81b9750a00f77f0910fed744 6.77kB / 6.77kB done
+#15 sha256:4b150b48b4116e2a22f2c39cc27025fbf4f153e2078fd3b14d159fdb5c7279da 5.22kB / 5.22kB done
+#15 sha256:3c5439d0ae62993af4cc4e21b8c777297e81bc40e200d4633c85a3e0f977a3bc 28.25MB / 28.25MB 0.3s done
+#15 sha256:709e8267cebf108d59c4e6e386882a5c79c10bbe11ecd02c6ed9ed4efa5b905d 3.31kB / 3.31kB 0.2s done
+#15 sha256:df736340692d217b57cd447c94f978f9a91ce3e8805b225e78374eae3aff864c 49.89MB / 49.89MB 0.4s done
+#15 sha256:d22dd8aef5082b9de7fb037db9c398ee2822c5c81cc5cbb63bb32a46a5decdb1 1.71MB / 1.71MB 0.2s done
+#15 sha256:0bee45faaffff77eee1e3d151cc650b854df28523ea01e5a2dcc0327da8793a9 448B / 448B 0.2s done
+#15 extracting sha256:3c5439d0ae62993af4cc4e21b8c777297e81bc40e200d4633c85a3e0f977a3bc 1.4s done
+#15 extracting sha256:709e8267cebf108d59c4e6e386882a5c79c10bbe11ecd02c6ed9ed4efa5b905d done
+#15 extracting sha256:df736340692d217b57cd447c94f978f9a91ce3e8805b225e78374eae3aff864c 0.6s
+#15 ...
+
+#16 [runtime  3/12] WORKDIR /app
+#16 DONE 0.0s
+
+#17 [runtime  4/12] COPY pyproject.toml uv.lock ./
+#17 DONE 0.0s
+
+#15 [frontend 1/6] FROM docker.io/library/node:22-slim@sha256:4b150b48b4116e2a22f2c39cc27025fbf4f153e2078fd3b14d159fdb5c7279da
+#15 extracting sha256:df736340692d217b57cd447c94f978f9a91ce3e8805b225e78374eae3aff864c 1.7s done
+#15 extracting sha256:d22dd8aef5082b9de7fb037db9c398ee2822c5c81cc5cbb63bb32a46a5decdb1 0.1s done
+#15 extracting sha256:0bee45faaffff77eee1e3d151cc650b854df28523ea01e5a2dcc0327da8793a9 done
+#15 DONE 4.0s
+
+#18 [runtime  5/12] RUN uv sync --frozen --no-default-groups --group app --no-install-project
+#18 0.390 Using CPython 3.12.16 interpreter at: /usr/local/bin/python3
+#18 0.390 Creating virtual environment at: .venv
+#18 0.476 Downloading uvloop (4.3MiB)
+#18 0.480 Downloading pydantic-core (2.1MiB)
+#18 0.487 Downloading numpy (16.0MiB)
+#18 0.489 Downloading onnxruntime (22.7MiB)
+#18 0.635  Downloaded pydantic-core
+#18 0.692  Downloaded uvloop
+#18 0.931  Downloaded onnxruntime
+#18 0.985  Downloaded numpy
+#18 1.012 Prepared 25 packages in 618ms
+#18 ...
+
+#19 [frontend 2/6] WORKDIR /front
+#19 DONE 0.0s
+
+#20 [frontend 3/6] COPY app/frontend/package.json app/frontend/package-lock.json ./
+#20 DONE 0.0s
+
+#18 [runtime  5/12] RUN uv sync --frozen --no-default-groups --group app --no-install-project
+#18 1.560 Installed 25 packages in 547ms
+#18 3.650 Bytecode compiled 1259 files in 2.08s
+#18 3.650  + annotated-doc==0.0.5
+#18 3.650  + annotated-types==0.8.0
+#18 3.650  + anyio==4.15.1
+#18 3.650  + click==8.5.0
+#18 3.650  + fastapi==0.162.0
+#18 3.650  + flatbuffers==25.12.19
+#18 3.650  + h11==0.16.0
+#18 3.650  + httptools==0.9.0
+#18 3.650  + idna==3.20
+#18 3.650  + numpy==2.5.4
+#18 3.650  + onnxruntime==1.31.1
+#18 3.650  + opentelemetry-api==1.45.2
+#18 3.650  + packaging==26.3
+#18 3.650  + protobuf==7.36.2
+#18 3.651  + pydantic==2.14.2
+#18 3.651  + pydantic-core==2.50.2
+#18 3.651  + python-dotenv==1.2.4
+#18 3.651  + pyyaml==6.0.3
+#18 3.652  + starlette==1.10.0
+#18 3.652  + typing-extensions==4.16.0
+#18 3.652  + typing-inspection==0.4.4
+#18 3.652  + uvicorn==0.54.0
+#18 3.652  + uvloop==0.23.0
+#18 3.652  + watchfiles==1.3.0
+#18 3.652  + websockets==17.3
+#18 DONE 3.7s
+
+#21 [runtime  6/12] COPY tools/ tools/
+#21 DONE 0.0s
+
+#22 [runtime  7/12] COPY app/__init__.py app/__init__.py
+#22 DONE 0.0s
+
+#23 [frontend 4/6] RUN npm ci
+#23 ...
+
+#24 [runtime  8/12] COPY app/api/ app/api/
+#24 DONE 0.0s
+
+#25 [runtime  9/12] COPY configs/ configs/
+#25 DONE 0.0s
+
+#26 [runtime 10/12] COPY models/ models/
+#26 DONE 0.0s
+
+#23 [frontend 4/6] RUN npm ci
+#23 4.037 
+#23 4.037 added 73 packages, and audited 74 packages in 4s
+#23 4.037 
+#23 4.037 9 packages are looking for funding
+#23 4.038   run `npm fund` for details
+#23 4.039 
+#23 4.039 found 0 vulnerabilities
+#23 4.040 npm notice
+#23 4.040 npm notice New major version of npm available! 10.9.9 -> 12.2.1
+#23 4.040 npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+#23 4.040 npm notice To update run: npm install -g npm@12.2.1
+#23 4.040 npm notice
+#23 DONE 4.2s
+
+#27 [frontend 5/6] COPY app/frontend/ ./
+#27 DONE 0.0s
+
+#28 [frontend 6/6] RUN npm run build
+#28 0.218 
+#28 0.218 > datascience-template-frontend@0.1.0 build
+#28 0.218 > tsc --noEmit && vite build
+#28 0.218 
+#28 2.078 vite v7.3.7 building client environment for production...
+#28 2.156 transforming...
+#28 6.255 ✓ 642 modules transformed.
+#28 6.788 rendering chunks...
+#28 6.799 computing gzip size...
+#28 6.829 dist/index.html                   0.47 kB │ gzip:   0.30 kB
+#28 6.829 dist/assets/index-CZIT7otH.css    4.67 kB │ gzip:   1.60 kB
+#28 6.829 dist/assets/index-Cajo--Qx.js   851.07 kB │ gzip: 284.24 kB
+#28 6.830 ✓ built in 4.71s
+#28 DONE 6.9s
+
+#29 [runtime 11/12] COPY --from=frontend /front/dist app/frontend/dist
+#29 DONE 0.0s
+
+#30 [runtime 12/12] RUN useradd --create-home --uid 1000 appuser
+#30 DONE 0.2s
+
+#31 exporting to image
+#31 exporting layers
+#31 exporting layers 2.5s done
+#31 writing image sha256:83f2a5fbf6dc54bcf80736fa4376ca1dc7e096972c4fbb6accbd1ef8e43272f2 done
+#31 naming to docker.io/library/app done
+#31 DONE 2.5s
