@@ -1,0 +1,101 @@
+# TEMPORÁRIO: gera lockfiles e valida o template. Será removido antes do merge na main.
+name: bootstrap
+
+on:
+  push:
+    branches: [bootstrap]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  bootstrap:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: astral-sh/setup-uv@v6
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - name: Python - lock, sync, format
+        run: |
+          uv --version
+          uv lock
+          uv sync
+          uv run ruff format . || true
+          uv run ruff check --fix . 2>&1 | tee ruff.log || true
+
+      - name: Python - pipeline + testes
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          make all 2>&1 | tee pipeline.log
+          uv run pytest -v 2>&1 | tee pytest.log
+
+      - name: Python - wheels para uso offline
+        run: |
+          uv export --all-groups --no-emit-project --no-hashes --format requirements-txt > req.txt
+          uvx --from pip pip download -r req.txt -d wheels --only-binary=:all: --python-version 3.12 \
+            --platform manylinux2014_x86_64 --platform manylinux_2_17_x86_64 --platform manylinux_2_28_x86_64 \
+            --platform manylinux_2_34_x86_64 --platform linux_x86_64 2>&1 | tail -5
+          uvx --from pip pip download hatchling -d wheels --only-binary=:all: 2>&1 | tail -2
+          ls wheels | wc -l
+
+      - name: Front - install + build
+        continue-on-error: true
+        working-directory: app/frontend
+        run: |
+          set -o pipefail
+          npm install 2>&1 | tee ../../npm-install.log
+          npm run build 2>&1 | tee ../../front-build.log
+          tar czf ../../node_modules.tgz node_modules
+
+      - name: Docker - build + smoke test
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          docker build -t app . 2>&1 | tee docker-build.log
+          docker run -d -p 8000:8000 --name app app
+          for i in $(seq 1 30); do curl -fs localhost:8000/api/health && break; sleep 1; done
+          {
+            curl -fs localhost:8000/api/health; echo
+            curl -fs localhost:8000/api/model | head -c 400; echo
+            curl -fs -X POST localhost:8000/api/predict -H 'Content-Type: application/json' \
+              -d '{"features": {"sepal_length": 6.5, "sepal_width": 3.0, "petal_length": 5.2, "petal_width": 2.0}}'; echo
+            curl -fs localhost:8000/ | head -c 300; echo
+            docker image ls app
+          } 2>&1 | tee docker-smoke.log
+          docker logs app 2>&1 | tail -20 >> docker-smoke.log
+
+      - name: Patch com as mudanças geradas
+        if: always()
+        run: |
+          git add -A -- . ':!wheels' ':!node_modules.tgz' ':!*.log' ':!req.txt' ':!app/frontend/dist' ':!data'
+          git -c core.fileMode=false diff --cached --binary > changes.patch
+          git diff --cached --stat
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: results
+          path: |
+            changes.patch
+            *.log
+            req.txt
+            app/frontend/dist
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: wheels
+          path: wheels
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: node-modules
+          path: node_modules.tgz
